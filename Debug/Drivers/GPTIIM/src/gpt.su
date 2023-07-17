@@ -1,0 +1,6 @@
+../Drivers/GPTIIM/src/gpt.c:12:13:clock_division	16	static
+../Drivers/GPTIIM/src/gpt.c:37:13:reload_preload	16	static
+../Drivers/GPTIIM/src/gpt.c:53:13:counter_dreaction	16	static
+../Drivers/GPTIIM/src/gpt.c:83:13:timer_enable	16	static
+../Drivers/GPTIIM/src/gpt.c:88:9:time_init	32	static
+../Drivers/GPTIIM/src/gpt.c:110:6:timer_pulse	24	static

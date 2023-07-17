@@ -1,0 +1,10 @@
+rcc.c:9:13:AHB_PRE_SELECT	10
+rcc.c:76:13:APB1_PRE_SELECT	6
+rcc.c:110:13:APB2_PRE_SELECT	6
+rcc.c:145:6:rcc_sys_init_hsi	3
+rcc.c:169:6:rcc_sys_init_hse	3
+rcc.c:193:6:rcc_sys_init_pllp_42MHz_all	3
+rcc.c:255:6:rcc_sys_init_pllr_32MHz_all	3
+rcc.c:318:6:rcc_ahb1_clk_enable	1
+rcc.c:322:6:rcc_ahb2_clk_enable	1
+rcc.c:326:6:rcc_ahb3_clk_enable	1

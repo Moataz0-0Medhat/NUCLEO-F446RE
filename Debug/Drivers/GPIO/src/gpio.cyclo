@@ -1,0 +1,7 @@
+gpio.c:9:13:pin_mode	5
+gpio.c:40:13:pin_outut_type	3
+gpio.c:61:13:pin_pull_type	4
+gpio.c:87:7:pin_init	1
+gpio.c:107:6:pin_level	3
+gpio.c:125:9:pin_read	1
+gpio.c:131:6:pin_af	34

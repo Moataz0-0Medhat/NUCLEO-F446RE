@@ -1,0 +1,6 @@
+gpt.c:12:13:clock_division	4
+gpt.c:37:13:reload_preload	3
+gpt.c:53:13:counter_dreaction	3
+gpt.c:83:13:timer_enable	1
+gpt.c:88:9:time_init	1
+gpt.c:110:6:timer_pulse	3
