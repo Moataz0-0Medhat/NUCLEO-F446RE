@@ -9,54 +9,52 @@
 #define GPT_H_
 
 #include "rd.h"
+#include <stdio.h>
 #define TIM_NULL	-1
-
-/*typedef enum
-{
-	gpt_time_tim2, gpt_time_tim3, gpt_time_tim4, gpt_time_tim5, gpt_time_tim9, gpt_time_tim10,
-	gpt_time_tim11, gpt_time_tim12, gpt_time_tim13, gpt_time_tim14, gpt_time_tim15
-}gpt_time_t;*/
+#define timer_UIF_flag_clear(x)   (x->TIMx_SR &= (1<<UIF))
 
 typedef enum
 {
-	gpt_prescaler_0, gpt_prescaler_2, gpt_prescaler_4, gpt_prescaler_8, gpt_prescaler_16
-}gpt_prescaler_t;
+	tim_mode_basic, tim_mode_input_capture, tim_mode_output_capture , tim_mode_one_pulse , tim_mode_pwm
+}tim_mode_t;
 
 typedef enum
 {
-	gpt_clock_division_0, gpt_clock_division_2, gpt_clock_division_4
-}gpt_clock_division_t;
+	tim_uint_us , tim_uint_ms
+}tim_uint_t;
 
 typedef enum
 {
-	gpt_direction_upcounter, gpt_direction_downcounter
-}gpt_direction_t;
-
-typedef enum
-{
-	gpt_reload_preload_enable, gpt_reload_preload_disable
-}gpt_reload_preload_t;
-
-typedef enum
-{
-	gpt_pulse_mode_stopped, gpt_pulse_mode_counting
-}gpt_pulse_mode_t;
+	tim_update_int_disable , tim_update_int_enable
+}tim_update_int_t;
 
 
 typedef struct
 {
-	volatile gpt_registers_t* 		timer ;
-			 gpt_prescaler_t  		prescaler ;
-			 gpt_clock_division_t	clk_division ;
-			 gpt_direction_t		direction ;
-			 gpt_reload_preload_t	reload_pre;
-			 uint
-}timer_t;
+	// General Config
+		tim_mode_t 			mode;
+		uint8_t			tim_clk_mhz;
+
+	// basic timer
+		uint16_t 			event_flag ;
+		tim_uint_t			uint;
+		tim_update_int_t	update_int;
+
+}tim_config_t;
+
+typedef struct
+{
+	volatile gpt_registers_t* timer ;
+			 tim_config_t 	 config;
+
+}tim_use_t;
 
 
-timer_t timer_init(volatile gpt_registers_t* timerx, gpt_prescaler_t prescaler, gpt_clock_division_t clk_division,
-		gpt_direction_t direction, gpt_reload_preload_t	reload_pre );
+tim_use_t timer_basic_new(volatile gpt_registers_t* timx, tim_uint_t uintx,tim_update_int_t update_intx,uint8_t tim_clk_mhzx, uint16_t event_flagx);
+void timer_basic_init(tim_use_t* timer);
+void timer_start(tim_use_t* timer);
+void timer_stop(tim_use_t* timer);
+void timer_update_event(tim_use_t* timer);
 
-void timer_pulse(timer_t* TIM , gpt_pulse_mode_t mode, uint32_t ms);
-void timer_auto_reload(timer_t* TIM, uint32_t value);
+
 #endif /* GPT_H_ */

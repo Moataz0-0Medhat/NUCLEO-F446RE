@@ -8,131 +8,112 @@
 #include "gpt.h"
 
 
-static void clock_division (timer_t* TIM)
+tim_use_t timer_basic_new(volatile gpt_registers_t* timx, tim_uint_t uintx,tim_update_int_t update_intx,uint8_t tim_clk_mhzx, uint16_t event_flagx)
 {
-	if ((TIM->clk_division) == gpt_clock_division_0 )
+	tim_use_t tim ;
+	tim.timer = timx;
+	tim.config.uint = uintx;
+	tim.config.update_int = update_intx ;
+	tim.config.event_flag = event_flagx;
+	tim.config.tim_clk_mhz = tim_clk_mhzx ;
+
+	return (tim);
+}
+
+
+void timer_basic_init(tim_use_t* timer)
+{
+	// Bit 0 CEN: Counter enable == 0: Counter disabled
+		timer->timer->TIMx_CR1 &= ~(1<<CEN);
+
+	//Bit 1 UDIS: Update disable == 0: UEV enabled
+		timer->timer->TIMx_CR1 &= ~(1<<UDIS);
+
+	//Bit 2 URS: Update request source == 1: Only counter overflow/underflow generates an update interrupt
+		timer->timer->TIMx_CR1 |= (1<<URS);
+
+	//Bit 3 OPM: One-pulse mode == 0: Counter is not stopped at update event
+		timer->timer->TIMx_CR1 &= ~(1<<OPM);
+
+	//Bit 4 DIR: Direction == 1: Counter used as down counter
+		timer->timer->TIMx_CR1 |= (1<<DIR);
+
+	//Bits 6:5 CMS: Center-aligned mode selection == 00: Edge-aligned mode.
+		timer->timer->TIMx_CR1 &= ~(1<<CMS0);
+		timer->timer->TIMx_CR1 &= ~(1<<CMS1);
+
+	//Bit 7 ARPE: Auto-reload preload enable == 1: TIMx_ARR register is buffered
+		timer->timer->TIMx_CR1 |= (1<<ARPE);
+
+	// Update interrupt enable  ||  Update interrupt disabled
+	if (timer->config.update_int == tim_update_int_enable)
 	{
-		// CKD = 00: tDTS = tCK_INT
-		TIM->timer->TIMx_CR1 &= ~(1<<CKD0);
-		TIM->timer->TIMx_CR1 &= ~(1<<CKD1);
+		// Bit 0 UIE: Update interrupt enable == 1: Update interrupt enabled
+			timer->timer->TIMx_DIER |= (1<<UIE);
 	}
-	else if ((TIM->clk_division) == gpt_clock_division_2 )
+	else if (timer->config.update_int == tim_update_int_disable)
 	{
-		// CKD = 01: tDTS = 2 × tCK_INT
-		TIM->timer->TIMx_CR1 |= (1<<CKD0);
-		TIM->timer->TIMx_CR1 &= ~(1<<CKD1);
-	}
-	else if ((TIM->clk_division) == gpt_clock_division_4 )
-	{
-		// CKD = 01: tDTS = 2 × tCK_INT
-		TIM->timer->TIMx_CR1 &= ~(1<<CKD0);
-		TIM->timer->TIMx_CR1 |= (1<<CKD1);
+		// Bit 0 UIE: Update interrupt enable == 0: Update interrupt disabled
+			timer->timer->TIMx_DIER &= ~(1<<UIE);
 	}
 	else
 	{
-		;
+		timer->config.update_int = TIM_NULL;
 	}
-}
-static void reload_preload (timer_t* TIM)
-{
-	//Auto-reload preload enable
-	if (TIM->reload_pre == gpt_reload_preload_enable )
+	// Bits 15:0 CNT[15:0]: Counter value
+	// TIM3 & TIM4 = 16bit  CNT = 0xFFFF
+	if ((timer->timer == TIM3)|| (timer->timer == TIM4))
 	{
-		TIM->timer->TIMx_CR1 |= (1<<ARPE);
+		timer->timer->TIMx_CNT = 0xFFFF ;
 	}
-	else if (TIM->reload_pre == gpt_reload_preload_disable )
+	// TIM2 & TIM5 = 32bit  CNT = 0xFFFFFFFF
+	else if ((timer->timer == TIM2)|| (timer->timer == TIM5))
 	{
-		TIM->timer->TIMx_CR1 &= ~(1<<ARPE);
+		timer->timer->TIMx_CNT = 0xFFFFFFFF ;
 	}
 	else
 	{
-		;
+		timer->timer->TIMx_CNT = TIM_NULL;
 	}
-}
-static void counter_dreaction (timer_t* TIM)
-{
-		//choose counter Direction  = counter up
-	if (TIM->direction == gpt_direction_upcounter )
+	// choose uint time used us | ms
+	////Set tick time to be 0.5 uS
+	if (timer->config.uint == tim_uint_us)
 	{
-		// 0: Counter used as up counter
-		TIM->timer->TIMx_CR1 &= ~(1<<ARPE);
-
-		//+ mode   10  : Center-aligned mode 2.when the counter is counting up.
-		//TIM->timer->TIMx_CR1 &= ~(1<<CMS0);
-		//TIM->timer->TIMx_CR1 |= (1<<CMS1);
+		timer->timer->TIMx_PSC = ((timer->config.tim_clk_mhz)/2);
+		timer->timer->TIMx_ARR = (2*(timer->config.event_flag));
 	}
-	else if (TIM->direction == gpt_direction_downcounter )
+	//Set tick time to be 0.5 mS
+	else if (timer->config.uint == tim_uint_ms)
 	{
-		// 1: Counter used as down counter
-		TIM->timer->TIMx_CR1 |= (1<<ARPE);
-
-		//+ mode   01  : Center-aligned mode 2.when the counter is counting down..
-		//TIM->timer->TIMx_CR1 |= (1<<CMS0);
-		//TIM->timer->TIMx_CR1 &= ~(1<<CMS1);
+		timer->timer->TIMx_PSC = ((timer->config.tim_clk_mhz)*1000/2);
+		timer->timer->TIMx_ARR = (2*(timer->config.event_flag));
 	}
 	else
 	{
-		;
+		timer->config.uint = TIM_NULL;
 	}
 
-	//+ mode   11  : Center-aligned mode 3.when the counter is counting up or counting down..
-	TIM->timer->TIMx_CR1 |= (1<<CMS0);
-	TIM->timer->TIMx_CR1 |= (1<<CMS1);
-}
-static void timer_enable (timer_t* TIM)
-{
-	TIM->timer->TIMx_CR1 |= (1<<CEN);
-}
-static void timer_prescaler (timer_t* TIM)
-{
-	TIM->timer->TIMx_PSC = TIM->prescaler ;
+
+
 }
 
-
-timer_t timer_init(volatile gpt_registers_t* timerx, gpt_prescaler_t prescaler, gpt_clock_division_t clk_division,
-		gpt_direction_t direction, gpt_reload_preload_t	reload_pre )
+void timer_start(tim_use_t* timer)
 {
+	//TIMx control register 1 (TIMx_CR1) == 1: Counter enabled
+		timer->timer->TIMx_CR1 |= (1<<CEN);
 
-	timer_t TIM ;
-
-	TIM.timer = timerx ;
-
-	TIM.clk_division = clk_division;
-	TIM.reload_pre = reload_pre;
-	TIM.direction = direction;
-	TIM.prescaler = prescaler;
-
-
-	clock_division(&TIM);
-	reload_preload(&TIM);
-	counter_dreaction(&TIM);
-	timer_prescaler(&TIM);
-
-
-	timer_enable(&TIM);
+}
+void timer_stop(tim_use_t* timer)
+{
+	//TIMx control register 1 (TIMx_CR1) == 0: Counter disabled
+		timer->timer->TIMx_CR1 &= ~(1<<CEN);
 }
 
-void timer_pulse(timer_t* TIM , gpt_pulse_mode_t mode, uint32_t ms)
+void timer_update_event(tim_use_t* timer)
 {
+	//This bit is set by hardware on an update event. It is cleared by software.
+		while (!((timer->timer->TIMx_SR>>UIF) & 1));
+	//Bit 0 UIF: Update interrupt flag == 0: No update occurred.
+		timer->timer->TIMx_SR &= (1<<UIF);
 
-	if (mode == gpt_pulse_mode_stopped )
-	{
-		//0: Counter is not stopped at update event
-		TIM->timer->TIMx_CR1 &= ~(1<<OPM);
-	}
-	else if (mode == gpt_pulse_mode_counting )
-	{
-		//1: Counter stops counting at the next update event
-		TIM->timer->TIMx_CR1 |= (1<<OPM);
-	}
-	else
-	{
-		;
-	}
-	TIM->timer->TIMx_ARR = ms;
-}
-
-void timer_auto_reload(timer_t* TIM, uint32_t value)
-{
-	TIM->timer->TIMx_ARR = value ;
 }

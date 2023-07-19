@@ -327,3 +327,12 @@ void rcc_ahb3_clk_enable(rcc_ahb3_peripherals peripheral)
 {
 	set_bit(RCC->RCC_AHB3ENR, peripheral);
 }
+void rcc_apb1_clk_enable(rcc_apb1_peripherals peripheral)
+{
+	set_bit(RCC->RCC_APB1ENR, peripheral);
+}
+
+void rcc_apb2_clk_enable(rcc_apb2_peripherals peripheral)
+{
+	set_bit(RCC->RCC_APB2ENR, peripheral);
+}

@@ -17,30 +17,42 @@
  */
 
 #include <stdint.h>
-#include "cpu.h"
+#include "gpt.h"
 #include "gpio.h"
 #include "rcc.h"
+
+
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
 #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
-
+tim_use_t timer2 ;
+pin_t led ;
 int main(void)
 {
 	rcc_sys_init_pllr_32MHz_all();
 	rcc_ahb1_clk_enable(RCC_GPIOA);
-	sys_delay_init(32000000);
-	pin_t led = pin_init(GPIOA, gpio_pin5, pin_mode_output, pin_push_pull, no_pull);
+	rcc_apb1_clk_enable(RCC_TIM2);
 
+	timer2 = timer_basic_new(TIM2, tim_uint_ms, tim_update_int_disable, 32 , 1000);
+	 led = pin_init(GPIOA, gpio_pin5, pin_mode_output, pin_push_pull, no_pull);
+	timer_basic_init(&timer2);
 
+	timer_start(&timer2);
 
 	/* Loop forever */
 	while (1)
 	{
-		pin_level(&led,pin_high);
-		delay_ms(1000);
-		pin_level(&led,pin_low);
-		delay_ms(1000);
+
+		pin_level(&led, pin_low);
 
 	}
+
 }
+
+void TIM2_IRQHandler (void)
+	{
+		pin_level(&led, pin_high);
+
+		timer_UIF_flag_clear(TIM2);
+	}

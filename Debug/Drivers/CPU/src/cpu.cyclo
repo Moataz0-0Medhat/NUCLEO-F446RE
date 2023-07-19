@@ -1,4 +1,4 @@
-cpu.c:12:6:SysTick_Handler	1
-cpu.c:17:6:sys_delay_init	1
-cpu.c:37:6:delay_us	2
-cpu.c:46:6:delay_ms	1
+../Drivers/CPU/src/cpu.c:12:6:SysTick_Handler	1
+../Drivers/CPU/src/cpu.c:17:6:sys_delay_init	1
+../Drivers/CPU/src/cpu.c:37:6:delay_us	2
+../Drivers/CPU/src/cpu.c:46:6:delay_ms	1

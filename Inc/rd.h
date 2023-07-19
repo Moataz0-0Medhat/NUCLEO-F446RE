@@ -9,7 +9,7 @@
 #define RD_RD_H_
 
 #include <stdint.h>
-#define RCC_Address  0x40023800
+#define RCC_Base  0x40023800
 
 // RCC_CR
 #define HSION			0
@@ -138,16 +138,16 @@ typedef struct
 
 }rcc_t;
 
-#define RCC ((volatile rcc_t*)(RCC_Address))
+#define RCC ((volatile rcc_t*)(RCC_Base))
 
-#define GPIOA_Address   0x40020000
-#define GPIOB_Address	0x40020400
-#define GPIOC_Address	0x40020800
-#define GPIOD_Address	0x40020C00
-#define GPIOE_Address	0x40021000
-#define GPIOF_Address	0x40021400
-#define GPIOG_Address	0x40021800
-#define GPIOH_Address	0x40021C00
+#define GPIOA_Base  0x40020000
+#define GPIOB_Base	0x40020400
+#define GPIOC_Base	0x40020800
+#define GPIOD_Base	0x40020C00
+#define GPIOE_Base	0x40021000
+#define GPIOF_Base	0x40021400
+#define GPIOG_Base	0x40021800
+#define GPIOH_Base	0x40021C00
 
 // GPIOx_MODER
 
@@ -433,25 +433,25 @@ typedef struct
 	volatile uint32_t GPIOx_AFRH;
 }gpio_t;
 
-#define GPIOA ((volatile gpio_t*)(GPIOA_Address))
-#define GPIOB ((volatile gpio_t*)(GPIOB_Address))
-#define GPIOC ((volatile gpio_t*)(GPIOC_Address))
-#define GPIOD ((volatile gpio_t*)(GPIOD_Address))
-#define GPIOE ((volatile gpio_t*)(GPIOE_Address))
-#define GPIOF ((volatile gpio_t*)(GPIOE_Address))
-#define GPIOG ((volatile gpio_t*)(GPIOE_Address))
-#define GPIOH ((volatile gpio_t*)(GPIOH_Address))
+#define GPIOA ((volatile gpio_t*)(GPIOA_Base))
+#define GPIOB ((volatile gpio_t*)(GPIOB_Base))
+#define GPIOC ((volatile gpio_t*)(GPIOC_Base))
+#define GPIOD ((volatile gpio_t*)(GPIOD_Base))
+#define GPIOE ((volatile gpio_t*)(GPIOE_Base))
+#define GPIOF ((volatile gpio_t*)(GPIOE_Base))
+#define GPIOG ((volatile gpio_t*)(GPIOE_Base))
+#define GPIOH ((volatile gpio_t*)(GPIOH_Base))
 
-#define TIM2_Address  	0x40000000
-#define TIM3_Address  	0x40000400
-#define TIM4_Address  	0x40000800
-#define TIM5_Address  	0x40001000
-#define TIM9_Address 	0x40014000
-#define TIM10_Address 	0x40014400
-#define TIM11_Address 	0x40014800
-#define TIM12_Address  	0x40001800
-#define TIM13_Address  	0x40001C00
-#define TIM14_Address  	0x40002000
+#define TIM2_Base  	0x40000000
+#define TIM3_Base  	0x40000400
+#define TIM4_Base  	0x40000800
+#define TIM5_Base  	0x40001000
+#define TIM9_Base 	0x40014000
+#define TIM10_Base 	0x40014400
+#define TIM11_Base 	0x40014800
+#define TIM12_Base  	0x40001800
+#define TIM13_Base  	0x40001C00
+#define TIM14_Base  	0x40002000
 
 
 // TIMx_CR1 Register
@@ -671,16 +671,16 @@ typedef struct
 
 }gpt_registers_t;
 
-#define TIM2 	((volatile gpt_t*)(TIM2_Address))
-#define TIM3 	((volatile gpt_t*)(TIM2_Address))
-#define TIM4 	((volatile gpt_t*)(TIM2_Address))
-#define TIM5 	((volatile gpt_t*)(TIM2_Address))
-#define TIM9 	((volatile gpt_t*)(TIM2_Address))
-#define TIM10	((volatile gpt_t*)(TIM2_Address))
-#define TIM11	((volatile gpt_t*)(TIM2_Address))
-#define TIM12	((volatile gpt_t*)(TIM2_Address))
-#define TIM13	((volatile gpt_t*)(TIM2_Address))
-#define TIM14	((volatile gpt_t*)(TIM2_Address))
+#define TIM2 	((volatile gpt_registers_t*)(TIM2_Base))
+#define TIM3 	((volatile gpt_registers_t*)(TIM3_Base))
+#define TIM4 	((volatile gpt_registers_t*)(TIM4_Base))
+#define TIM5 	((volatile gpt_registers_t*)(TIM5_Base))
+#define TIM9 	((volatile gpt_registers_t*)(TIM9_Base))
+#define TIM10	((volatile gpt_registers_t*)(TIM10_Base))
+#define TIM11	((volatile gpt_registers_t*)(TIM11_Base))
+#define TIM12	((volatile gpt_registers_t*)(TIM12_Base))
+#define TIM13	((volatile gpt_registers_t*)(TIM13_Base))
+#define TIM14	((volatile gpt_registers_t*)(TIM14_Base))
 
 
 #endif /* RD_RD_H_ */

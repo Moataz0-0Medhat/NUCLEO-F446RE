@@ -1,6 +1,5 @@
-gpt.c:12:13:clock_division	4
-gpt.c:37:13:reload_preload	3
-gpt.c:53:13:counter_dreaction	3
-gpt.c:83:13:timer_enable	1
-gpt.c:88:9:time_init	1
-gpt.c:110:6:timer_pulse	3
+../Drivers/GPTIIM/src/gpt.c:11:11:timer_basic_new	1
+../Drivers/GPTIIM/src/gpt.c:24:6:timer_basic_init	9
+../Drivers/GPTIIM/src/gpt.c:100:6:timer_start	1
+../Drivers/GPTIIM/src/gpt.c:106:6:timer_stop	1
+../Drivers/GPTIIM/src/gpt.c:112:6:timer_update_event	2
