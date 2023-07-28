@@ -123,7 +123,7 @@ void usart_write(volatile uart_registers_t* usart,uint8_t data)
 
 
 	// wait TXE Flag Set ( Note: This bit is used during single buffer transmission)
-	while (((usart->USART_SR>>TXE)&1) !=0);
+	while (((usart->USART_SR>>TXE)&1) == 0);
 
 	// write data in register DR[8:0]: Data value
 	usart->USART_DR = data ;
@@ -152,7 +152,7 @@ char usart_read(volatile uart_registers_t* usart)
 
 
 	//wait until the RXEN bit set  Bit 5 RXNE: Read data register not empty
-	while(((usart->USART_SR>>RXNE)&1) != 0);
+	while(((usart->USART_SR>>RXNE)&1) == 0);
 
 
 	// return value
@@ -160,19 +160,18 @@ char usart_read(volatile uart_registers_t* usart)
 }
 
 
-char* usart_read_string(volatile uart_registers_t* usart)
+void usart_read_string(volatile uart_registers_t* usart, char* str)
 {
-	char* str ;
-	char ptr = usart_read(usart) ;
 
+	char ptr = usart_read(usart) ;
 	while (ptr != '\0')
 	{
 		*str = ptr ;
-		str ++;
+		str++;
 		ptr = usart_read(usart);
 
 	}
-	*str = '\0';
+	str = '\0';
 
-	return str;
+
 }

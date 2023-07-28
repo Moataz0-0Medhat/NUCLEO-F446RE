@@ -17,6 +17,7 @@
  */
 
 #include <stdint.h>
+#include "string.h"
 
 #include "gpio.h"
 #include "rcc.h"
@@ -34,7 +35,9 @@ int main(void)
 
 	pin_t pin_tx ;
 	pin_t pin_rx ;
+	pin_t led;
 
+	char str[20];
 
 	rcc_sys_init_pllr_32MHz_all();
 	rcc_ahb1_clk_enable(RCC_GPIOA);
@@ -43,18 +46,34 @@ int main(void)
 	pin_tx = pin_init(GPIOA,gpio_pin2 ,pin_mode_alternate_fun,pin_push_pull , gpio_null);
 	pin_rx = pin_init(GPIOA,gpio_pin3 ,pin_mode_alternate_fun,pin_open_drain , gpio_null);
 
+	pin_rx = pin_init(GPIOA,gpio_pin5 ,pin_mode_output,pin_open_drain , pull_up);
+
 	pin_af(&pin_rx, AF7);
 	pin_af(&pin_tx, AF7);
 
 
-	 usart_init(USART2, usart_parity_disable, usart_stop_1, 9600, 32000000, usart_mode_no_int);
+	usart_init(USART2, usart_parity_disable, usart_stop_1, 9600, 32000000, usart_mode_no_int);
+
 
 	/* Loop forever */
 	while (1)
 	{
-		usart_write(USART2, 'M');
+		//usart_write(USART2, 'M');
 
+		usart_read_string(USART2, str);
 
+		if (!(strcmp(str, "LED ON")))
+		{
+			pin_level(&led, pin_high);
+		}
+		else if (!(strcmp(str, "LED OFF")))
+		{
+			pin_level(&led, pin_low);
+		}
+		else
+		{
+			;
+		}
 	}
 
 }

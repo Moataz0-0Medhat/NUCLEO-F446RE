@@ -33,5 +33,5 @@ void usart_write(volatile uart_registers_t* usart,uint8_t data);
 void usart_write_string(volatile uart_registers_t* usart,char* str);
 
 char usart_read(volatile uart_registers_t* usart);
-char* usart_read_string(volatile uart_registers_t* usart);
+void usart_read_string(volatile uart_registers_t* usart, char* str);
 #endif /* UART_H_ */
