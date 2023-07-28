@@ -28,6 +28,7 @@ Drivers/EXTI/src \
 Drivers/GPIO/src \
 Drivers/GPTIIM/src \
 Drivers/RCC/src \
+Drivers/UART/src \
 Src \
 Startup \
 

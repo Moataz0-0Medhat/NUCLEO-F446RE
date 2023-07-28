@@ -17,42 +17,45 @@
  */
 
 #include <stdint.h>
-#include "gpt.h"
+
 #include "gpio.h"
 #include "rcc.h"
-
+#include "uart.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
 #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
-tim_use_t timer2 ;
-pin_t led ;
+
+
+
 int main(void)
 {
+
+	pin_t pin_tx ;
+	pin_t pin_rx ;
+
+
 	rcc_sys_init_pllr_32MHz_all();
 	rcc_ahb1_clk_enable(RCC_GPIOA);
-	rcc_apb1_clk_enable(RCC_TIM2);
+	rcc_apb1_clk_enable(RCC_USART2);
 
-	timer2 = timer_basic_new(TIM2, tim_uint_ms, tim_update_int_disable, 32 , 1000);
-	 led = pin_init(GPIOA, gpio_pin5, pin_mode_output, pin_push_pull, no_pull);
-	timer_basic_init(&timer2);
+	pin_tx = pin_init(GPIOA,gpio_pin2 ,pin_mode_alternate_fun,pin_push_pull , gpio_null);
+	pin_rx = pin_init(GPIOA,gpio_pin3 ,pin_mode_alternate_fun,pin_open_drain , gpio_null);
 
-	timer_start(&timer2);
+	pin_af(&pin_rx, AF7);
+	pin_af(&pin_tx, AF7);
+
+
+	 usart_init(USART2, usart_parity_disable, usart_stop_1, 9600, 32000000, usart_mode_no_int);
 
 	/* Loop forever */
 	while (1)
 	{
+		usart_write(USART2, 'M');
 
-		pin_level(&led, pin_low);
 
 	}
 
 }
 
-void TIM2_IRQHandler (void)
-	{
-		pin_level(&led, pin_high);
-
-		timer_UIF_flag_clear(TIM2);
-	}

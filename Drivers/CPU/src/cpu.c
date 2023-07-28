@@ -47,3 +47,14 @@ void delay_ms(uint32_t ms)
 {
 	delay_us(ms*1000);
 }
+
+// TIM2 Vector table num 28
+void interrupt_enable(void)
+{
+	NVIC_ISER |= (1<<28);
+}
+
+void interrupt_disable(void)
+{
+	NVIC_ICER |= (1<<28);
+}

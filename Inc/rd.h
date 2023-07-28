@@ -9,6 +9,10 @@
 #define RD_RD_H_
 
 #include <stdint.h>
+                           //*****************************//
+                           // ******** RCC_Base  ********//
+                           //*****************************//
+
 #define RCC_Base  0x40023800
 
 // RCC_CR
@@ -139,6 +143,10 @@ typedef struct
 }rcc_t;
 
 #define RCC ((volatile rcc_t*)(RCC_Base))
+
+                           //*****************************//
+                           // ******** GPIO_Base  ********//
+                           //*****************************//
 
 #define GPIOA_Base  0x40020000
 #define GPIOB_Base	0x40020400
@@ -442,6 +450,11 @@ typedef struct
 #define GPIOG ((volatile gpio_t*)(GPIOE_Base))
 #define GPIOH ((volatile gpio_t*)(GPIOH_Base))
 
+
+                           //*****************************//
+                           // ******** TIM_Base  ********//
+                           //*****************************//
+
 #define TIM2_Base  	0x40000000
 #define TIM3_Base  	0x40000400
 #define TIM4_Base  	0x40000800
@@ -551,7 +564,7 @@ typedef struct
 // TIMx_CCMR1 Register INPUT
 
 #define CC1S0		0
-#define OC1S1		1
+#define CC1S1		1
 #define IC1PSC0		2
 #define IC1PSC1		3
 #define IC1F0		4
@@ -570,7 +583,7 @@ typedef struct
 // TIMx_CCMR2 Register
 
 #define CC3S0		0
-#define OC3S1		1
+#define CC3S1		1
 #define OC3FE		2
 #define OC3PE		3
 #define OC3M0		4
@@ -589,7 +602,7 @@ typedef struct
 // TIMx_CCMR2 Register INPUT
 
 #define CC3S0		0
-#define OC3S1		1
+#define CC3S1		1
 #define IC3PSC0		2
 #define IC3PSC1		3
 #define IC3F0		4
@@ -681,6 +694,126 @@ typedef struct
 #define TIM12	((volatile gpt_registers_t*)(TIM12_Base))
 #define TIM13	((volatile gpt_registers_t*)(TIM13_Base))
 #define TIM14	((volatile gpt_registers_t*)(TIM14_Base))
+
+                           //*****************************//
+                           // ******** UART_Base  ********//
+                           //*****************************//
+
+#define USART1_Base 	0x40011000
+#define USART2_Base  	0x40004400
+#define USART3_Base  	0x40004800
+#define UART4_Base 	 	0x40004C00
+#define UART5_Base  	0x40005000
+#define USART6_Base 	0x40011400
+
+//USART_SR  registers
+#define PE  	0
+#define FE  	1
+#define NF  	2
+#define ORE  	3
+#define IDLE  	4
+#define RXNE  	5
+#define TC  	6
+#define TXE  	7
+#define LBD  	8
+#define CTS  	9
+
+//USART_DR registers
+#define DR  	0
+
+
+//USART_BRR registers
+#define DIV_Fraction  	0
+#define DIV_Mantissa  	4
+
+//USART_CR1 registers
+#define SBK  		0
+#define RWU  		1
+#define RE  		2
+#define TE  		3
+#define IDLEIE  	4
+#define RXNEIE  	5
+#define TCIE  		6
+#define TXEIE  		7
+#define PEIE  		8
+#define PS  		9
+#define PCE  		10
+#define WAKE  		11
+#define M  			12
+#define UE  		13
+#define OVER8  		15
+
+//USART_CR2 registers
+#define ADD0  		0
+#define ADD1  		1
+#define ADD2 		2
+#define ADD3 		3
+#define LBDL  		5
+#define LBDIE  		6
+
+#define LBCL  		8
+#define CPHA  		9
+#define CPOL  		10
+#define CLKEN  		11
+#define STOP0  		12
+#define STOP1 		13
+#define LINEN  		14
+
+//USART_CR3 registers
+#define EIE  		0
+#define IREN  		1
+#define IRLP  		2
+#define HDSEL  		3
+#define NACK  		4
+#define SCEN  		5
+#define DMAR  		6
+#define DMAT  		7
+#define RTSE  		8
+#define CTSE 		9
+#define CTSIE  		10
+#define ONEBI  		11
+
+
+//USART_GTPR registers
+#define PSC0  		0
+#define PSC1  		1
+#define PSC2  		2
+#define PSC3  		3
+#define PSC4  		4
+#define PSC5  		5
+#define PSC6  		6
+#define PSC7  		7
+#define GT0  		8
+#define GT1  		9
+#define GT2  		10
+#define GT3  		11
+#define GT4  		12
+#define GT5 		13
+#define GT6  		14
+#define GT7  		15
+
+
+typedef struct
+{
+	uint32_t 	USART_SR;
+	uint32_t 	USART_DR;
+	uint32_t  	USART_BRR;
+	uint32_t  	USART_CR1;
+	uint32_t 	USART_CR2;
+	uint32_t  	USART_CR3;
+	uint32_t  	USART_GTPR;
+
+
+}uart_registers_t;
+
+#define USART1 	((volatile uart_registers_t*)(USART1_Base))
+#define USART2 	((volatile uart_registers_t*)(USART2_Base))
+#define USART3 	((volatile uart_registers_t*)(USART3_Base))
+#define UART4 	((volatile uart_registers_t*)(UART4_Base))
+#define UART5 	((volatile uart_registers_t*)(UART5_Base))
+#define USART6 	((volatile uart_registers_t*)(USART6_Base))
+
+
 
 
 #endif /* RD_RD_H_ */

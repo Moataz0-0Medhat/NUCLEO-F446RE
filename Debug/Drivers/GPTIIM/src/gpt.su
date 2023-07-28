@@ -1,5 +1,7 @@
-../Drivers/GPTIIM/src/gpt.c:11:11:timer_basic_new	40	static
-../Drivers/GPTIIM/src/gpt.c:24:6:timer_basic_init	16	static
-../Drivers/GPTIIM/src/gpt.c:100:6:timer_start	16	static
-../Drivers/GPTIIM/src/gpt.c:106:6:timer_stop	16	static
-../Drivers/GPTIIM/src/gpt.c:112:6:timer_update_event	16	static
+../Drivers/GPTIIM/src/gpt.c:11:11:timer_new_basic	56	static
+../Drivers/GPTIIM/src/gpt.c:24:11:timer_new_output_comare	56	static
+../Drivers/GPTIIM/src/gpt.c:36:6:timer_basic_init	16	static
+../Drivers/GPTIIM/src/gpt.c:112:6:timer_output_compare_init	16	static
+../Drivers/GPTIIM/src/gpt.c:351:6:timer_start	16	static
+../Drivers/GPTIIM/src/gpt.c:357:6:timer_stop	16	static
+../Drivers/GPTIIM/src/gpt.c:363:6:timer_update_event	16	static

@@ -3,6 +3,7 @@
 "./Drivers/GPIO/src/gpio.o"
 "./Drivers/GPTIIM/src/gpt.o"
 "./Drivers/RCC/src/rcc.o"
+"./Drivers/UART/src/uart.o"
 "./Src/main.o"
 "./Src/syscalls.o"
 "./Src/sysmem.o"
